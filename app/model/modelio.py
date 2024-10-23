@@ -15,6 +15,7 @@ def join_embeddings_to_df(jobs_data,augmented_description_embeddings):
     columns_embeddings_df = [str(c) for c in range(augmented_description_embeddings.shape[1])]
     return pd.concat([jobs_data,pd.DataFrame(augmented_description_embeddings, columns=columns_embeddings_df)],axis=1,join='inner')
 
+
 # CLASSES
 class ModelInput(BaseModel):
     remote_allowed: int
@@ -28,9 +29,9 @@ class ModelInput(BaseModel):
 
     def df_create(self) -> pd.DataFrame:
         columns = ["remote_allowed"
-                   ,"work_type_contract"
-                   ,"work_type_full_time"
-                   ,"work_type_part_time"
+                   ,"work_type_CONTRACT"
+                   ,"work_type_FULL_TIME"
+                   ,"work_type_PART_TIME"
                    ,"state"
                    ,"company_name"
                    ,"title"

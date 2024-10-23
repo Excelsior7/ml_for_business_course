@@ -9,43 +9,15 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.decomposition import PCA
 from scipy.stats import randint, loguniform
-import dill
 import os
+import joblib
+from freq_transformer import frequency_transformer
 
 
 DATASET_PATH = Path(__file__).parent.parent / "data" / "preprocessed_postings.csv"
 OUTPUT_PATH = Path(__file__).parent.parent / "models" / "best_model_script.pkl"
 SCORE_PATH = Path(__file__).parent.parent / "out" / "score.txt"
 
-
-class FrequencyEncoder(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.freq_map = {}
-
-    def fit(self, X: pd.Series, y=None):
-        # Compute state frequency on training set
-        self.freq_map = X.value_counts(normalize=False).to_dict()
-        return self
-
-    def transform(self, X: pd.Series):
-        # Encode the states in the test data set according to the frequencies calculated in the training set.
-        # If a state was not in the training set, we assign it a frequency of 1.
-        freq_map_ = self.freq_map.copy()
-        
-        for x in X: 
-            if x not in self.freq_map.keys():
-                freq_map_[x] = 1
-
-        return pd.DataFrame(X.map(freq_map_))
-    
-    def set_output(self, transform="pandas"):
-        self._transform_output = transform
-        return self
-    
-def frequency_transformer() -> ColumnTransformer:
-    return ColumnTransformer(transformers=[('frequency_encoding',FrequencyEncoder(),'state')]
-                             ,remainder='passthrough'
-                             ,verbose_feature_names_out=False)
 
 def make_pipeline_with_model(model: BaseEstimator) -> Pipeline:
     pipeline = Pipeline(
@@ -84,8 +56,8 @@ def train_model(output_path: Path = OUTPUT_PATH, scorepath: Path = SCORE_PATH) -
 
     cv = RandomizedSearchCV(pipeline
                             ,param_distributions=param
-                            ,n_iter=100
-                            ,cv=10
+                            ,n_iter=1
+                            ,cv=2
                             ,scoring="neg_root_mean_squared_error"
                             ,refit=True
                             ,verbose=True)
@@ -94,7 +66,7 @@ def train_model(output_path: Path = OUTPUT_PATH, scorepath: Path = SCORE_PATH) -
         print("Training in progress...")
         best_model = cv.fit(X_train, y_train)
         with open(output_path, "wb") as f:
-            dill.dump(best_model, f)
+            joblib.dump(best_model, f)
 
         with open(scorepath, "w") as f:
             f.write("In sample error: ")

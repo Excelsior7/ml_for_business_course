@@ -1,2 +1,2 @@
-In sample error: 12849.885040823177
-Out of sample error:32901.8143189995
+In sample error: 22790.62543128117
+Out of sample error:43422.14237378747
