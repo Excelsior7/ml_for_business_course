@@ -160,3 +160,8 @@ In our first iteration we chose 5 models:
     * max_iter: randint(110,200) -> randint(170,220)    
     * max_leaf_nodes: randint(100,250) -> randint(190,250)
     * min_samples_leaf: randint(20,70) -> randint(30,70)
+
+## Score:
+
+- In sample error: 12849.885040823177
+- Out of sample error:32901.8143189995
