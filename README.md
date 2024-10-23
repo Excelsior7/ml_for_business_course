@@ -70,7 +70,7 @@ The dataset used for this project is the LinkedIn Job Postings Dataset, sourced 
 
 ### Exploratory Data Analysis choices
 
-- In every job posting including salary informations we either had a salary range (min_salary and max_salary) or a med_salary. In both cases we used that info to calculate a **normalized_salary** wich is a year salary so it takes into account the pay_period  (Hourly, Monthly, Yearly). We decided then to predict the **normalized_salary** and to get rid of pay_period, max_salary, med_salary and min_salary
+- In every job posting including salary informations we either had a salary range (min_salary and max_salary) or a med_salary. In both cases we used that info to calculate a **standardized_salary** wich is a year salary so it takes into account the pay_period  (Hourly, Monthly, Yearly). We decided then to predict the **standardized_salary** and to get rid of pay_period, max_salary, med_salary and min_salary
 
 - We only kept postings with non null salary information: 36073 / 123849
 
@@ -86,4 +86,77 @@ The dataset used for this project is the LinkedIn Job Postings Dataset, sourced 
 
 ### Target
 
-We want to predict the normalized_salary. 
+We want to predict the **standardized_salary**. 
+
+## The baseline used: which features, which pre-processing, validation strategy, model and the metrics obtained
+
+For our baseline we used a HistGradientBoostingRegressor() model with no hyper parameter optimization. We obtained a RMSE = 35644.83459134061. 
+
+Seeing that the RMSE was very high we asked ourselves if it was pertinent to keep the job_description in the embeding or not cause when embeding the augmented_description we obtained over 300 columns and knowing that our dataset has only 30K lines... We decided to not only check for models but also to do PCA to see the impact of the columns. 
+
+## First Iteration: 
+
+In our first iteration we chose 5 models:
+
+- MLPRegressor(): 
+    'pca__n_components': randint(10,150),
+    'model__hidden_layer_sizes': [(100,100),(100,150),(150,100),(150,150)],
+    'model__learning_rate_init': loguniform(1e-4, 1),
+    'model__learning_rate': ["constant", "adaptive"],
+    'model__alpha': loguniform(1e-4, 1)
+- Ridge():
+    'pca__n_components': randint(10,150),
+    'model__alpha': uniform(loc=0,scale=3)
+- KNeighborsRegressor():
+    'pca__n_components': randint(10,150),
+    'model__n_neighbors': randint(5,30), 
+- DecisionTreeRegressor():
+    'pca__n_components': randint(10,150),
+    'model__max_depth': randint(5,50), 
+    'model__min_samples_split': randint(5,20), 
+    'model__min_samples_leaf': randint(5,50) 
+- HistGradientBoostingRegressor():
+    'pca__n_components': randint(10,150),
+    'model__learning_rate': loguniform(1e-4, 1),
+    'model__max_iter': randint(5,50), 
+    'model__max_leaf_nodes': randint(5,200),
+    'model__min_samples_leaf': randint(5,50)
+
+
+### KEY LEARNINGS FOLLOWING THE 1st EXPERIENCE:
+
+1. **We want to focus on the top three models:**   
+    * (1) HistGradientBoostingRegressor       
+    * (2) MLPRegressor   
+    * (3) Ridge
+2. **PCA:**    
+    * n_components: (10,150) -> (100,250)
+3. **MLPRegressor:**    
+    * learning_rate_init: loguniform(1e-4, 1) -> loguniform(1e-4, 1e-2)
+4. **Ridge:**    
+    * alpha: uniform(loc=0,scale=3) -> uniform(loc=0.5,scale=3)
+5. **HistGradientBoostingRegressor**
+    * max_iter: randint(5,50) -> randint(50,150)    
+    * max_leaf_nodes: randint(5,200) -> randint(20,250)
+
+## Second Iteration: 
+
+### KEY LEARNINGS FOLLOWING THE 2nd EXPERIENCE:
+
+1. **We want to focus on the best models:**   
+    * HistGradientBoostingRegressor     
+2. **HistGradientBoostingRegressor**
+    * learning_rate: loguniform(1e-4, 1) -> loguniform(1e-3, 1)
+    * max_iter: randint(50,150) -> randint(110,200)    
+    * max_leaf_nodes: randint(20,250) -> randint(90,250)
+    * min_samples_leaf: randint(5,50) -> randint(20,70)
+
+## Third Iteration:
+
+### KEY LEARNINGS FOLLOWING THE 3rd EXPERIENCE:
+  
+* **HistGradientBoostingRegressor**
+    * learning_rate: loguniform(1e-3, 1) -> loguniform(1e-2, 1)
+    * max_iter: randint(110,200) -> randint(170,220)    
+    * max_leaf_nodes: randint(100,250) -> randint(190,250)
+    * min_samples_leaf: randint(20,70) -> randint(30,70)
