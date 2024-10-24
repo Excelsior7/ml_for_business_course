@@ -76,4 +76,4 @@ def train_model(output_path: Path = OUTPUT_PATH, scorepath: Path = SCORE_PATH) -
             f.write(str(root_mean_squared_error(y_test,best_model.predict(X_test))))
 
 if __name__ == "__main__":
-    train_model()
+    train_model() 
