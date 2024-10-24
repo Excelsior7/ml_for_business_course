@@ -82,7 +82,9 @@ The dataset used for this project is the LinkedIn Job Postings Dataset, sourced 
 
 - We used getdummies to encode work_type
 
-- From location we decided to keep only state information and to concatenate that information with job title, company name and description. 
+- From location we decided to keep only state information.
+
+- We decided to concatenate job title, company name and job description information into one column augmented_description. 
 
 ### Target
 
@@ -92,7 +94,7 @@ We want to predict the **standardized_salary**.
 
 For our baseline we used a HistGradientBoostingRegressor() model with no hyper parameter optimization. We obtained a RMSE = 35644.83459134061. 
 
-Seeing that the RMSE was very high we asked ourselves if it was pertinent to keep the job_description in the embeding or not cause when embeding the augmented_description we obtained over 300 columns and knowing that our dataset has only 30K lines... We decided to not only check for models but also to do PCA to see the impact of the columns. 
+Seeing that the RMSE was very high we decided to not only check for models but also to do PCA to see the impact of the augmented_description column. 
 
 ## First Iteration: 
 
