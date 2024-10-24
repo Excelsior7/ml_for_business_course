@@ -13,4 +13,6 @@ COPY ./app /code/app
 
 COPY ./models /code/models
 
+ENV PYTHONPATH="${PYTHONPATH}:/code/app"
+
 CMD ["uvicorn", "app.main:app"]
