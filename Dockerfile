@@ -10,8 +10,8 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 
 COPY ./app /code/app
-
 COPY ./models /code/models
+COPY stop_words.pkl /code/stop_words.pkl
 
 ENV PYTHONPATH="${PYTHONPATH}:/code/app"
 

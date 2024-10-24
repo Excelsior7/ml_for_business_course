@@ -1,6 +1,7 @@
 import requests
 
-url = "http://127.0.0.1:80/predict"  # URL de votre API locale
+#url = "http://127.0.0.1:80/predict"  # URL de votre API locale
+url = "https://ml-for-business-course.onrender.com/predict"  # URL de votre API locale
 
 # Dictionnaire avec les paramètres à passer à l'API
 data = {
