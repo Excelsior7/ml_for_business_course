@@ -166,4 +166,8 @@ In our first iteration we chose 5 models:
 ## Score:
 
 - In sample error: 12849.885040823177
-- Out of sample error:32901.8143189995
+- Out of sample error: 32901.8143189995
+
+## Project Diagram Architecture
+
+!["Project Diagram Architecture"](project_diagram_architecture.png)
